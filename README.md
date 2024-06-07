@@ -1,2 +1,2 @@
 # eprocess-dkom-unlinking
- EPROCESS Unlinking example in "C" using DKOM Manipulation
+ EPROCESS Unlinking example in "C" using DKOM Manipulation, This does not bypass Patchguard.
