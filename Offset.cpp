@@ -1,7 +1,7 @@
 #include <ntddk.h>
 #include "Offset.h"
 
-// ntoskrnl.exe¥¬ ¿©µµøÏ πˆ¿¸∞˙ ∞¸∞Ëæ¯¿Ã «ˆ¿Á±Ó¡ˆ¥¬ «◊ªÛ ¥Ÿ¿Ω∞˙ ∞∞¿∫ ¡§∫∏∏¶ ∞°¡≥¿Ω.
+// ntoskrnl.exe
 // ImageName : System
 // PID : 4
 // PLIST_ENTRY = PID + sizeof(PID)
@@ -18,13 +18,11 @@ ULONG CalcPIDOffset()
     {
         if (*(PHANDLE)((PCHAR)peprocess + i) == pid)
         {
-            // PLIST_ENTRY¥¬ PID ¥Ÿ¿Ωø° ¿ßƒ°«ÿ¿÷¿Ω.
+            // PLIST_ENTRY- PID
             list = (PLIST_ENTRY)((unsigned char*)peprocess + i + sizeof(HANDLE));
             
-            // ¿Ø»ø«— ¡÷º“¿Œ¡ˆ »Æ¿Œ«—¥Ÿ.
             if (MmIsAddressValid(list))
             {
-                // ¡§ªÛ¿˚¿∏∑Œ ø¨∞·µ» ∏ÆΩ∫∆Æ¿Œ¡ˆ »Æ¿Œ »ƒ PID ¡÷º“∏¶ π›»Ø«—¥Ÿ.
                 if (list == list->Flink->Blink)
                 {
                     return i;
@@ -39,7 +37,7 @@ ULONG CalcPIDOffset()
 extern "C"
 ULONG CalcProcessNameOffset()
 {
-    // ntoskrn.exe ¿« EPROCESS ±∏¡∂√º »πµÊ
+    // ntoskrn.exe Ïùò EPROCESS Íµ¨Ï°∞Ï≤¥ ÌöçÎìù
     PEPROCESS ntosKrnl = PsInitialSystemProcess;
     int i = 0;
 
