@@ -42,7 +42,7 @@ VOID HideProcess()
 		currentProcess = (unsigned char*)((unsigned char*)currentNode - listEntryOffset);
 		RtlInitAnsiString(&currentProcessName, (const char*)((unsigned char*)currentProcess + nameOffset));
 
-		//Target Process인지 확인
+		//Target Process
 		if (RtlCompareString(&targetProcessName, &currentProcessName, TRUE) == 0)
 		{
 			DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Found target process %s.\n", target);
