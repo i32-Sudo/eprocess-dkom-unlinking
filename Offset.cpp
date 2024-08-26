@@ -37,7 +37,6 @@ ULONG CalcPIDOffset()
 extern "C"
 ULONG CalcProcessNameOffset()
 {
-    // ntoskrn.exe 의 EPROCESS 구조체 획득
     PEPROCESS ntosKrnl = PsInitialSystemProcess;
     int i = 0;
 
